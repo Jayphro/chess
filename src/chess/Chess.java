@@ -10,13 +10,17 @@ import java.io.*;
 import javax.swing.*;
         
 public class Chess extends javax.swing.JFrame {
-    boolean aiChooesed;
-    int colorChoosed;
+    boolean aiChoosed=false;
+    //int colorChoosed;
+    File dataFile = new File("dataaa.txt");
+    FileWriter out;
+    BufferedWriter writeFile;
+    FileReader in;
+    BufferedReader readFile;
     JLabel [] [] gridboard= new JLabel [8][8];
-    JLabel [] [] gridboard1= new JLabel [8][8];
     Game game=new Game(true,1);
-    Player[] p={new Human(0),new AI(1)};
-    int moveNum=0,selectX=-1,selectY=-1;
+    Player[] p=new Player[2];
+    int moveNum=0,selectX=-1,selectY=-1,aiNum=1;
     boolean pieceSelected=false;
     public void display(){
         ImageIcon[] icon = new ImageIcon[13];
@@ -37,7 +41,7 @@ public class Chess extends javax.swing.JFrame {
             for(int i=0;i<8;i++){
                 if(game.b.board[i][j][0]!=null){
                     switch(game.b.board[i][j][0]){
-                        case PAWNINDANGER:
+                        case ENPASSANT:
                         case NEWPAWN:
                         case PAWN:
                             gridboard[i][j].setIcon(icon[1]);
@@ -63,7 +67,7 @@ public class Chess extends javax.swing.JFrame {
                 }
                 if(game.b.board[i][j][1]!=null){
                     switch(game.b.board[i][j][1]){
-                        case PAWNINDANGER:
+                        case ENPASSANT:
                         case NEWPAWN:
                         case PAWN:
                             gridboard[i][j].setIcon(icon[7]);
@@ -96,9 +100,28 @@ public class Chess extends javax.swing.JFrame {
     }
     
     public Chess() {
+        if(Start.ai.equals("AI")){
+            aiChoosed=true;
+        }else{
+            aiChoosed=false;
+        }
+        if(Start.num.equals("black")){
+            aiNum=0;
+        }else{
+            aiNum=1;
+        }
+        if(aiChoosed){
+            p[(aiNum-1)*(aiNum-1)]=new Human((aiNum-1)*(aiNum-1));
+            p[aiNum]=new AI(aiNum);
+        }else{
+            p[0]=new Human(0);
+            p[1]=new Human(1);
+        }
+        if(aiNum==0&&aiChoosed){
+            moveNum=1;
+            ((AI)p[aiNum]).calculateMove(3,game);
+        }
         initComponents();
-        p[0]=new Human(0);
-        p[1]=new AI(1);
         //piecesPanel1.setBounds(55,55,600,600);
         // make grid 
         gridboard = new JLabel [8][8];
@@ -116,7 +139,6 @@ public class Chess extends javax.swing.JFrame {
                 
             }
         }
-        
         // make grid 
         
         
@@ -134,6 +156,7 @@ public class Chess extends javax.swing.JFrame {
 
         chessPanel = new javax.swing.JPanel();
         backgroundPanel = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         piecesPanel = new javax.swing.JPanel();
         piecesPanel1 = new javax.swing.JPanel();
@@ -148,6 +171,9 @@ public class Chess extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -156,6 +182,11 @@ public class Chess extends javax.swing.JFrame {
 
         backgroundPanel.setOpaque(false);
         backgroundPanel.setPreferredSize(new java.awt.Dimension(710, 710));
+        backgroundPanel.setLayout(new javax.swing.OverlayLayout(backgroundPanel));
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/chess/0.png"))); // NOI18N
+        backgroundPanel.add(jLabel6);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/chess/chessboard.png"))); // NOI18N
         jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -163,21 +194,7 @@ public class Chess extends javax.swing.JFrame {
                 jLabel1MouseClicked(evt);
             }
         });
-
-        javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
-        backgroundPanel.setLayout(backgroundPanelLayout);
-        backgroundPanelLayout.setHorizontalGroup(
-            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(0, 20, Short.MAX_VALUE))
-        );
-        backgroundPanelLayout.setVerticalGroup(
-            backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(0, 22, Short.MAX_VALUE))
-        );
+        backgroundPanel.add(jLabel1);
 
         piecesPanel.setOpaque(false);
         piecesPanel.setPreferredSize(new java.awt.Dimension(600, 600));
@@ -223,10 +240,10 @@ public class Chess extends javax.swing.JFrame {
             chessPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 710, Short.MAX_VALUE)
             .addGroup(chessPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(chessPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chessPanelLayout.createSequentialGroup()
+                    .addContainerGap(54, Short.MAX_VALUE)
                     .addComponent(piecesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap(56, Short.MAX_VALUE)))
             .addGroup(chessPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(chessPanelLayout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -242,10 +259,10 @@ public class Chess extends javax.swing.JFrame {
             chessPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 710, Short.MAX_VALUE)
             .addGroup(chessPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(chessPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chessPanelLayout.createSequentialGroup()
+                    .addContainerGap(56, Short.MAX_VALUE)
                     .addComponent(piecesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap(58, Short.MAX_VALUE)))
             .addGroup(chessPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(chessPanelLayout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -253,7 +270,7 @@ public class Chess extends javax.swing.JFrame {
                     .addGap(0, 0, Short.MAX_VALUE)))
             .addGroup(chessPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, chessPanelLayout.createSequentialGroup()
-                    .addContainerGap(40, Short.MAX_VALUE)
+                    .addContainerGap(44, Short.MAX_VALUE)
                     .addComponent(piecesPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 625, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(45, 45, 45)))
         );
@@ -281,6 +298,28 @@ public class Chess extends javax.swing.JFrame {
         });
 
         jButton3.setText("EXIT");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("SAVE");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("LOAD");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 51, 51));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -290,39 +329,49 @@ public class Chess extends javax.swing.JFrame {
                 .addComponent(chessPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(xin, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(yin))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ain))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bin))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
-                            .addComponent(jButton1)
-                            .addComponent(jButton3))))
-                .addGap(0, 65, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton2)
+                                    .addComponent(jButton1)
+                                    .addComponent(jButton3)
+                                    .addComponent(jButton4)
+                                    .addComponent(jButton5)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(xin, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(yin))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(ain))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(bin)))))
+                        .addGap(0, 75, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(25, 25, 25))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(chessPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 46, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(118, 118, 118)
+                .addGap(33, 33, 33)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(xin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -344,6 +393,10 @@ public class Chess extends javax.swing.JFrame {
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton5)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -357,6 +410,7 @@ public class Chess extends javax.swing.JFrame {
     private void piecesPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_piecesPanelMouseClicked
         int x=evt.getX(),y=evt.getY();
         int LabelX,LabelY;
+        boolean check=true;
         ImageIcon[] icon = new ImageIcon[7];
         if(moveNum==1){
             icon[0] = new ImageIcon("src/chess/g0.png");
@@ -390,7 +444,7 @@ public class Chess extends javax.swing.JFrame {
                 gridboard[i][j].setIcon(icon[0]);
                 if(game.b.board[i][j][(moveNum-1)*(moveNum-1)]!=null){
                     switch(game.b.board[i][j][(moveNum-1)*(moveNum-1)]){
-                        case PAWNINDANGER:
+                        case ENPASSANT:
                         case NEWPAWN:
                         case PAWN:
                             gridboard[i][j].setIcon(icon[1]);
@@ -423,10 +477,53 @@ public class Chess extends javax.swing.JFrame {
             game.saveUndo();
             p[moveNum].move(selectX,selectY,LabelX,LabelY,game);
             if(game.b.board[LabelX][LabelY][moveNum]!=null){
-                //moveNum=(moveNum-1)*(moveNum-1);
-                ((AI)p[1]).calculateMove(1,game);
-               // moveNum=(moveNum-1)*(moveNum-1);
+                if(aiChoosed){
+                    moveNum=(moveNum-1)*(moveNum-1);
+                    if(winCheck()){
+                        if(aiNum==1){
+                            jLabel6.setIcon(new ImageIcon("src/chess/checkmate1.png"));
+                        }else{
+                            jLabel6.setIcon(new ImageIcon("src/chess/checkmate2.png"));
+                        }
+                    }
+                    ((AI)p[aiNum]).calculateMove(3,game);
+                    moveNum=(moveNum-1)*(moveNum-1);
+                    if(winCheck()){
+                        if(aiNum==1){
+                            jLabel6.setIcon(new ImageIcon("src/chess/checkmate2.png"));
+                        }else{
+                            jLabel6.setIcon(new ImageIcon("src/chess/checkmate1.png"));
+                        }
+                    }
+                }else{
+                    moveNum=(moveNum-1)*(moveNum-1);
+                    if(winCheck()&&moveNum==1){
+                        jLabel6.setIcon(new ImageIcon("src/chess/checkmate1.png"));
+                    }
+                    if(winCheck()&&moveNum==0){
+                        jLabel6.setIcon(new ImageIcon("src/chess/checkmate2.png"));
+                    }
+                }
             }
+            for( int i=0;i<8;i++){
+                for(int j=0;j<8;j++){
+                    if(game.b.board[i][j][moveNum]!=Piece.KING){
+                    valid=game.b.analyzeBoard(p[moveNum].playerNum,i,j);
+                        for(int k=0;k<8;k++){
+                            for(int l=0;l<8;l++){
+                                if(valid[k][l]){
+                                    check=false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(check){
+                jLabel7.setText("CHECK");
+            }else{
+            jLabel7.setText("");
+        }
             pieceSelected=false;
             display();
         }
@@ -437,15 +534,42 @@ public class Chess extends javax.swing.JFrame {
     private void piecesPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_piecesPanel1MouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_piecesPanel1MouseClicked
-
+    public boolean winCheck(){
+        boolean[][] valid=new boolean[8][8];
+        boolean checkMate=true;
+        for(int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                /*valid=game.b.analyzeBoard(p[moveNum].playerNum,i,j);
+                for(int k=0;k<8;k++){
+                    for(int l=0;l<8;l++){
+                        if(valid[k][l]){
+                            checkMate=false;
+                        }
+                    }
+                }*/
+                if(game.b.board[i][j][moveNum]==Piece.KING){
+                    checkMate=false;
+                }
+            }
+        }
+        return checkMate;
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int x=Integer.parseInt(xin.getText()),y=Integer.parseInt(yin.getText()),
                 a=Integer.parseInt(ain.getText()),b=Integer.parseInt(bin.getText());
         p[moveNum].move(x,y,a,b,game);
         if(game.b.board[a][b][moveNum]!=null){
-            moveNum=(moveNum-1)*(moveNum-1);
-            //((AI)p[1]).calculateMove(5,game);
-           // moveNum=(moveNum-1)*(moveNum-1);
+            if(aiChoosed){
+                ((AI)p[aiNum]).calculateMove(3,game);
+            }else{
+                moveNum=(moveNum-1)*(moveNum-1);
+                if(winCheck()&&moveNum==1){
+                    jLabel6.setIcon(new ImageIcon("src/chess/checkmate1.png"));
+                }
+                if(winCheck()&&moveNum==0){
+                    jLabel6.setIcon(new ImageIcon("src/chess/checkmate2.png"));
+                }
+            }
         }
         display();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -455,6 +579,118 @@ public class Chess extends javax.swing.JFrame {
         game.b=game.undoBoard.clone();
         display();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        try {
+			out = new FileWriter(dataFile);
+			writeFile = new BufferedWriter(out);
+			for (int i = 0; i < 8; i++) {
+				for(int j=0;j<8;j++){
+                                    for(int k=0;k<2;k++){
+                                        if(game.b.board[i][j][k]!=null){
+                                            switch(game.b.board[i][j][k]){
+                                                case PAWN:
+                                                    writeFile.write("1");
+                                                    break;
+                                                case ROOK:
+                                                    writeFile.write("2");
+                                                    break;
+                                                case KNIGHT:
+                                                    writeFile.write("3");
+                                                    break;
+                                                case BISHOP:
+                                                    writeFile.write("4");
+                                                    break;
+                                                case QUEEN:
+                                                    writeFile.write("5");
+                                                    break;
+                                                case KING:
+                                                    writeFile.write("6");
+                                                    break;
+                                                case NEWPAWN:
+                                                    writeFile.write("7");
+                                                    break;
+                                                case ENPASSANT:
+                                                    writeFile.write("8");
+                                                    break;
+                                                default:
+                                                    writeFile.write("0");
+                                            }
+                                        }else{
+                                            writeFile.write("0");
+                                        }
+                                        writeFile.newLine();
+                                    }
+                                }
+			}  
+                        writeFile.write(String.valueOf(moveNum));
+    		writeFile.close();
+    		out.close();
+    	} catch (Exception e) {
+    	}
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        String[] l=new String[129];
+        int index=0;
+        try {
+			in = new FileReader(dataFile);
+			readFile = new BufferedReader(in);
+    		while ((l[index] = readFile.readLine()) != null ) {
+                    System.out.println(l[index]);
+                    index++;
+    		}
+    		readFile.close();
+    		in.close();
+            } catch (Exception e) {
+                
+            }
+        index=0;
+        for(int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                for(int k=0;k<2;k++){
+                    switch(Integer.parseInt(l[index])){
+                        case 0:
+                            game.b.board[i][j][k]=null;
+                            break;
+                        case 1:
+                            game.b.board[i][j][k]=Piece.PAWN;
+                            break;
+                        case 2:
+                            game.b.board[i][j][k]=Piece.ROOK;
+                            break;
+                        case 3:
+                            game.b.board[i][j][k]=Piece.KNIGHT;
+                            break;
+                        case 4:
+                            game.b.board[i][j][k]=Piece.BISHOP;
+                            break;
+                        case 5:
+                            game.b.board[i][j][k]=Piece.QUEEN;
+                            break;
+                        case 6:
+                            game.b.board[i][j][k]=Piece.KING;
+                            break;
+                        case 7:
+                            game.b.board[i][j][k]=Piece.NEWPAWN;
+                            break;
+                        case 8:
+                            game.b.board[i][j][k]=Piece.ENPASSANT;
+                            break;
+                        default:
+                            break;
+                    }
+                    index++;
+                }
+            }
+        }
+        moveNum=Integer.parseInt(l[index]);
+        display();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -488,7 +724,7 @@ public class Chess extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Chess().setVisible(true);
+                new Start().setVisible(true);
             }
         });
     }
@@ -503,11 +739,15 @@ public class Chess extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel piecesPanel;
     private javax.swing.JPanel piecesPanel1;
     private javax.swing.JTextField xin;

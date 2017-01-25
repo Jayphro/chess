@@ -27,15 +27,20 @@ public class Game {
         //GOTTA INCLUDE PAWN->QUEEN RULE
         validMove=b.analyzeBoard(p,a,c);
         if(validMove[x][y]){
+            if(b.board[a][c][p]==Piece.ENPASSANT){
+                b.board[a][c][p]=Piece.PAWN;
+            }
             if(b.board[a][c][p]==Piece.NEWPAWN){
-                if(a==3){
-                    b.board[a][c][p]=Piece.PAWNINDANGER;
+                if((a==3&&p==0)||(a==4&&p==1)){
+                    b.board[a][c][p]=Piece.ENPASSANT;
                 }else{
                     b.board[a][c][p]=Piece.PAWN;
                 }
             }
-            if(b.board[a][c][p]==Piece.PAWNINDANGER){
-                b.board[a][c][p]=Piece.PAWN;
+            if(b.board[a][c][p]==Piece.PAWN){
+                if((p==0&&a==6)||(p==1&&a==1)){
+                    b.board[a][c][p]=Piece.QUEEN;
+                }
             }
             b.board[x][y][p]=b.board[a][c][p];
             b.board[x][y][(p-1)*(p-1)]=null;

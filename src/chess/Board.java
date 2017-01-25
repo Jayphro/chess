@@ -201,7 +201,7 @@ public class Board {
             for(int a = 0; a < 8; a++){
                 int pawns = 0;
                 for(int b = 0; b < 8; b++){
-                    if((board[a][b][p] == Piece.PAWN)||(board[a][b][p] == Piece.NEWPAWN)||(board[a][b][p] == Piece.PAWNINDANGER)){
+                    if((board[a][b][p] == Piece.PAWN)||(board[a][b][p] == Piece.NEWPAWN)||(board[a][b][p] == Piece.ENPASSANT)){
                         pawns++;
                     }
                 }
@@ -271,7 +271,7 @@ public class Board {
                 if(board[a+2-4*p][b][p]==null&&board[a+2-4*p][b][(p-1)*(p-1)]==null){
                     r[a+2-4*p][b]=true;
                 }
-            case PAWNINDANGER:
+            case ENPASSANT:
             case PAWN:
                 if(board[a+1-2*p][b][p]==null&&board[a+1-2*p][b][(p-1)*(p-1)]==null){
                     r[a+1-2*p][b]=true;
@@ -282,10 +282,10 @@ public class Board {
                 if(b-1>=0&&board[a+1-2*p][b-1][(p-1)*(p-1)]!=null){
                     r[a+1-2*p][b-1]=true;
                 }
-                if(b-1>=0&&board[a][b-1][(p-1)*(p-1)]==Piece.PAWNINDANGER&&board[a+1-2*p][b-1][p]==null&&board[a+1-2*p][b-1][(p-1)*(p-1)]==null){
+                if(b-1>=0&&board[a][b-1][(p-1)*(p-1)]==Piece.ENPASSANT&&board[a+1-2*p][b-1][p]==null&&board[a+1-2*p][b-1][(p-1)*(p-1)]==null){
                     r[a+1-2*p][b-1]=true;
                 }
-                if(b+1<8&&board[a][b+1][(p-1)*(p-1)]==Piece.PAWNINDANGER&&board[a+1-2*p][b+1][p]==null&&board[a+1-2*p][b+1][(p-1)*(p-1)]==null){
+                if(b+1<8&&board[a][b+1][(p-1)*(p-1)]==Piece.ENPASSANT&&board[a+1-2*p][b+1][p]==null&&board[a+1-2*p][b+1][(p-1)*(p-1)]==null){
                     r[a+1-2*p][b-1]=true;
                 }
                 break;
@@ -460,7 +460,7 @@ public class Board {
                         if(board[a+2-4*p][b][p]==null&&board[a+2-4*p][b][(p-1)*(p-1)]==null){
                             r[a+2-4*p][b]=true;
                         }
-                    case PAWNINDANGER:
+                    case ENPASSANT:
                     case PAWN:
                         if(board[a+1-2*p][b][p]==null&&board[a+1-2*p][b][(p-1)*(p-1)]==null){
                             r[a+1-2*p][b]=true;
@@ -471,10 +471,10 @@ public class Board {
                         if(b-1>=0&&board[a+1-2*p][b-1][(p-1)*(p-1)]!=null){
                             r[a+1-2*p][b-1]=true;
                         }
-                        if(b-1>=0&&board[a][b-1][(p-1)*(p-1)]==Piece.PAWNINDANGER&&board[a+1-2*p][b-1][p]==null&&board[a+1-2*p][b-1][(p-1)*(p-1)]==null){
+                        if(b-1>=0&&board[a][b-1][(p-1)*(p-1)]==Piece.ENPASSANT&&board[a+1-2*p][b-1][p]==null&&board[a+1-2*p][b-1][(p-1)*(p-1)]==null){
                             r[a+1-2*p][b-1]=true;
                         }
-                        if(b+1<8&&board[a][b+1][(p-1)*(p-1)]==Piece.PAWNINDANGER&&board[a+1-2*p][b+1][p]==null&&board[a+1-2*p][b+1][(p-1)*(p-1)]==null){
+                        if(b+1<8&&board[a][b+1][(p-1)*(p-1)]==Piece.ENPASSANT&&board[a+1-2*p][b+1][p]==null&&board[a+1-2*p][b+1][(p-1)*(p-1)]==null){
                             r[a+1-2*p][b-1]=true;
                         }
                         break;

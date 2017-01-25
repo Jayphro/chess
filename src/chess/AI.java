@@ -26,7 +26,7 @@ public class AI extends Player{
         int num=0;
         if(n==0){
             ArrayList<Double>tree=new ArrayList<>();
-            tree.add(g.b.findBoardValue()*(pNum-0.5));
+            tree.add(g.b.findBoardValue());
             return tree;
         }else{
             ArrayList<ArrayList>tree=new ArrayList<>();
